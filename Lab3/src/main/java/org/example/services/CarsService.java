@@ -1,6 +1,7 @@
 // CarsService.java
 package org.example.services;
 
+import org.example.entities.Brand;
 import org.example.entities.Car;
 import org.example.repositories.CarsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class CarsService {
 
     public Optional<Car> findById(UUID id) {
         return carsRepository.findById(id);
+    }
+
+    public List<Car> findByBrand(Brand brand) {
+        return carsRepository.findByBrand(brand);
     }
 
     public Car save(Car car) {

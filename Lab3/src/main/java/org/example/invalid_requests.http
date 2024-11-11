@@ -1,0 +1,47 @@
+### Get unexisting car
+GET http://localhost:8080/cars/00000000-0000-0000-0000-000000000000
+
+### Create a car with unexisting brand
+POST http://localhost:8080/cars/add
+Content-Type: application/json
+
+{
+  "model": "Fiesta",
+  "horsePower": 10,
+  "brand": "Ford"
+}
+
+### Edit unexisting car
+PUT http://localhost:8080/cars/00000000-0000-0000-0000-000000000000
+
+### Add car to invalid brand
+POST http://localhost:8080/brands/00000000-0000-0000-0000-000000000000/cars
+Content-Type: application/json
+
+{
+  "model": "Fiesta",
+  "horsePower": 10,
+  "brand": "Ford"
+}
+
+### Delete unexisting car
+DELETE http://localhost:8080/cars/00000000-0000-0000-0000-000000000000
+
+### Delete unexisting brand
+DELETE http://localhost:8080/brands/00000000-0000-0000-0000-000000000000
+
+### List cars from invalid category
+GET http://localhost:8080/brands/Ford/cars
+
+### Create empty category (for next test)
+POST http://localhost:8080/brands
+Content-Type: application/json
+
+{
+  "name": "Ford",
+  "issueYear": 1900
+}
+
+### List empty category
+GET http://localhost:8080/brands/Ford/cars
+

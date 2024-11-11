@@ -6,6 +6,7 @@ import org.example.services.BrandsService;
 import org.example.services.CarsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
@@ -26,8 +27,14 @@ public class CarController {
 
     @GetMapping("/cars")
     public ResponseEntity<List<CarDTO>> listAllCars(@RequestParam(required = false) String sort) {
+        List<Car> carList = carsService.findAll();
+
+        if (carList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
         List<CarDTO> resultList = new ArrayList<>();
-        for (Car car : carsService.findAll())
+        for (Car car : carList)
         {
             CarDTO carDTO = new CarDTO(car.getModel(), car.getHorsePower(), car.getBrand().getName());
             resultList.add(carDTO);
@@ -52,19 +59,16 @@ public class CarController {
         return car.map(carEntity -> new ResponseEntity<>(CarDTO.from(carEntity), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/cars/add/{uuid}")
-    public ResponseEntity<CarDTO> addCar(@PathVariable UUID uuid, @RequestParam String model, @RequestParam String horsePower, @RequestParam String brandName) {
+    @PostMapping("/cars/add")
+    public ResponseEntity<CarDTO> addCar(@RequestBody CarDTO carDTO) {
 
-        if (carsService.findById(uuid).isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        var brand = brandsService.findByName(brandName).stream().findFirst().orElse(null);
+        var brand = brandsService.findByName(carDTO.getBrand()).stream().findFirst().orElse(null);
         if (brand == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         var car = Car.builder()
-                .model(model)
-                .horsePower(Integer.parseInt(horsePower))
+                .model(carDTO.getModel())
+                .horsePower(carDTO.getHorsePower())
                 .brand(brand)
                 .build();
 
@@ -94,4 +98,34 @@ public class CarController {
 
         return new ResponseEntity<>(CarDTO.from(foundCar), HttpStatus.OK); // Kod 200 OK
     }
+
+    @PostMapping("/brands/{uuid}/cars")
+    public ResponseEntity<CarDTO> addCar(@PathVariable UUID uuid, @RequestBody CarDTO carDTO) {
+        var brand = brandsService.findById(uuid);
+        if (brand.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        var newCar = Car.builder()
+                .model(carDTO.getModel())
+                .horsePower(carDTO.getHorsePower())
+                .brand(brandsService.findById(uuid).get())
+                .build();
+
+        carsService.save(newCar);
+
+        return new ResponseEntity<>(CarDTO.from(newCar), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/cars/{uuid}")
+    public ResponseEntity<Void> deleteCar(@PathVariable UUID uuid) {
+        var car = carsService.findById(uuid);
+        if (car.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        carsService.delete(car.get());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
