@@ -28,8 +28,7 @@ Content-Type: application/json
 {
   "model": "Fiesta",
   "horsePower": 10,
-  "brand": "Ford",
-  "UUID": "00000000-0000-0000-0000-000000000000"
+  "brandId": "00000000-0000-0000-0000-000000000000"
 }
 
 ### Delete unexisting car

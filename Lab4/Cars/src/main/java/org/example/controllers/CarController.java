@@ -65,11 +65,10 @@ public class CarController {
 
         // Wykonanie zapytania GET do aplikacji "brands" w celu sprawdzenia, czy marka istnieje
         ResponseEntity<Void> brandResponse = restTemplate.exchange(brandUrl, HttpMethod.GET, null, Void.class);
-
+        System.out.println("KOD: " + brandResponse.getStatusCode());
         if (brandResponse.getStatusCode() == HttpStatus.NO_CONTENT) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
 
         Car car = Car.builder()
                 .model(carDTO.getModel())
@@ -78,6 +77,10 @@ public class CarController {
                 .build();
 
         carsService.save(car);
+
+        String addCarUrl =  "http://localhost:8081/brands/" + carDTO.getBrandId() + '/' + car.getId().toString();
+        restTemplate = new RestTemplate();
+        restTemplate.postForEntity(addCarUrl, null, Void.class);
 
         return new ResponseEntity<>(CarDTO.from(car), HttpStatus.CREATED);
     }

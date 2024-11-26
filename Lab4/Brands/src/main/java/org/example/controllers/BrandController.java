@@ -39,6 +39,33 @@ public class BrandController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
+    @PutMapping("/{brandId}")
+    public ResponseEntity<BrandDTO> updateBrand(@PathVariable UUID brandId, @RequestBody BrandDTO brandDTO) {
+        var brand = brandsService.findById(brandId);
+        if (brand.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        brand.get().setIssueYear(brandDTO.getIssueYear());
+        brandsService.save(brand.get());
+
+        return new ResponseEntity<>(brandDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/{uuid}/{caruuid}")
+    public ResponseEntity<Void> addCar(@PathVariable UUID uuid, @PathVariable UUID caruuid)
+    {
+        var brand = brandsService.findById(uuid);
+
+        if (brand.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        brand.get().getCars().add(caruuid);
+        brandsService.save(brand.get());
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PostMapping
     public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brandDTO) {
         if (!brandsService.findByName(brandDTO.getName()).isEmpty()) {
@@ -63,6 +90,7 @@ public class BrandController {
         notifyCarManagementAboutDeletion(uuid);
 
         brandsService.delete(brand.get());
+        System.out.println("Deleted Brand: " + brand.get().getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -46,8 +46,10 @@ public class CarsService {
 
     public void deleteAllByBrandId(UUID brandId) {
         for (Car car : findAll()) {
-            if (car.getBrandId() == brandId)
+            if (car.getBrandId().equals(brandId)) {
+                System.out.println("Deleted: " + car);
                 carsRepository.delete(car);
+            }
         }
     }
 }

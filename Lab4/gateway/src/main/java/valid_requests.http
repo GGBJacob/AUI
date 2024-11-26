@@ -2,14 +2,14 @@
 GET http://localhost:8080/cars
 
 
-### Modify BMW M9
+### Modify BMW M9 into Tesla
 PUT http://localhost:8080/cars/73a33a96-d821-4f1e-9109-4c78db0df1f5
 Content-Type: application/json
 
 {
   "model": "M8",
   "horsePower": 1000,
-  "brand": "Tesla"
+  "brandId": "9fd93d44-3b70-4d7a-8363-5b73a676f185"
 }
 
 ### Create new BMW using cars
@@ -19,30 +19,11 @@ Content-Type: application/json
 {
   "model": "M10",
   "horsePower": 1250,
-  "brand": "BMW"
+  "brandId": "550e8400-e29b-41d4-a716-446655440000"
 }
 
-
-### Create a new Tesla model Y using brand
-POST http://localhost:8080/brands/9fd93d44-3b70-4d7a-8363-5b73a676f185/cars
-Content-Type: application/json
-
-{
-  "model": "Y",
-  "horsePower": 720
-}
-
-### List all Teslas sorted by horse power
-GET http://localhost:8080/brands/Tesla/cars?sort=hp
-
-### Update Tesla issue year
-PUT http://localhost:8080/brands/9fd93d44-3b70-4d7a-8363-5b73a676f185
-Content-Type: application/json
-
-{
-  "name": "Tesla",
-  "issueYear": 2020
-}
+### Delete Audi brand
+DELETE http://localhost:8080/brands/f47ac10b-58cc-4372-a567-0e02b2c3d479
 
 ### List brands
 GET http://localhost:8080/brands
@@ -56,6 +37,16 @@ Content-Type: application/json
   "issueYear": 1945
 }
 
+### Update Tesla issue year
+PUT http://localhost:8080/brands/9fd93d44-3b70-4d7a-8363-5b73a676f185
+Content-Type: application/json
+
+{
+  "name": "Tesla",
+  "issueYear": 2020
+}
+
+
 ### Create Skoda car
 POST http://localhost:8080/cars/add
 Content-Type: application/json
@@ -63,11 +54,5 @@ Content-Type: application/json
 {
   "model": "Octavia",
   "horsePower": 1250,
-  "brand": "Skoda"
+  "brandId": "c8c09dac-fbc9-4583-97be-95763d2018ce"
 }
-
-### Delete Audi brand
-DELETE http://localhost:8080/brands/f47ac10b-58cc-4372-a567-0e02b2c3d479
-
-### List Skodas
-GET http://localhost:8080/brands/Skoda/cars
