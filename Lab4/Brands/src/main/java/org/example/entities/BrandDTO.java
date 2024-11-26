@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 public class BrandDTO {
     private String name;
     private int issueYear;
-    private List<CarDTO> cars;
-
+//    private List<CarDTO> cars;
+//
     public static BrandDTO from(Brand brand) {
-        return new BrandDTO(brand.getName(), brand.getIssueYear(), brand.getCars().stream().map(CarDTO::from).collect(Collectors.toList()));
+        return new BrandDTO(brand.getName(), brand.getIssueYear());
     }
 }

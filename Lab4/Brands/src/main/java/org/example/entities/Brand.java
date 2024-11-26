@@ -27,9 +27,9 @@ public class Brand implements Serializable {
     @Column(name="issue_year")
     int issueYear;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @Builder.Default
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    List<Car> cars = new ArrayList<>();
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
+//    @Builder.Default
+//    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    List<Car> cars = new ArrayList<>();
 }
