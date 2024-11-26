@@ -33,7 +33,7 @@ Content-Type: application/json
 }
 
 ### List all Teslas sorted by horse power
-GET http://localhost:8080/brands/9fd93d44-3b70-4d7a-8363-5b73a676f185/cars?sort=hp
+GET http://localhost:8080/brands/Tesla/cars?sort=hp
 
 ### Update Tesla issue year
 PUT http://localhost:8080/brands/9fd93d44-3b70-4d7a-8363-5b73a676f185

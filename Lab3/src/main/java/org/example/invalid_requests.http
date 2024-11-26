@@ -13,6 +13,13 @@ Content-Type: application/json
 
 ### Edit unexisting car
 PUT http://localhost:8080/cars/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "model": "Fiesta",
+  "horsePower": 10,
+  "brand": "Ford"
+}
 
 ### Add car to invalid brand
 POST http://localhost:8080/brands/00000000-0000-0000-0000-000000000000/cars
