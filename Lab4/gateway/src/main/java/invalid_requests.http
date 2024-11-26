@@ -22,13 +22,14 @@ Content-Type: application/json
 }
 
 ### Add car to invalid brand
-POST http://localhost:8080/brands/00000000-0000-0000-0000-000000000000/cars
+POST http://localhost:8080/cars/add
 Content-Type: application/json
 
 {
   "model": "Fiesta",
   "horsePower": 10,
-  "brand": "Ford"
+  "brand": "Ford",
+  "UUID": "00000000-0000-0000-0000-000000000000"
 }
 
 ### Delete unexisting car

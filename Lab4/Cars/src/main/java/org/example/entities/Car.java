@@ -4,49 +4,45 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="cars")
+@Table(name = "cars")
 public class Car implements Comparable<Car>, Serializable {
 
     @Id
-    @Column(name="car_ID")
+    @Column(name = "car_ID")
     @Builder.Default
     private UUID id = UUID.randomUUID();
 
-    @Column(name="car_model")
-    String model;
+    @Column(name = "car_model", nullable = false)
+    private String model;
 
-    @Column(name="car_hp")
-    int horsePower;
+    @Column(name = "car_hp", nullable = false)
+    private int horsePower;
 
-    @ManyToOne
-    @JoinColumn(name = "car_brand")
-    Brand brand;
+    @Column(name = "brand_id", nullable = false)
+    private UUID brandId;
 
     @Override
     public int compareTo(Car o) {
-        if(this.model.compareTo(o.model) != 0)
+        if (this.model.compareTo(o.model) != 0)
             return this.model.compareTo(o.model);
-        if (o.horsePower > this.horsePower)
-            return 1;
-        else
-            return -1;
+        return Integer.compare(o.horsePower, this.horsePower);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(model, horsePower, brand.name);
+        return Objects.hash(model, horsePower, brandId);
     }
 
     @Override
-    public String toString()
-    {
-        return "Car(model=" + model + ", horsePower=" + horsePower + ", brand=" + brand.name + ")";
+    public String toString() {
+        return "Car(model=" + model + ", horsePower=" + horsePower + ", brandId=" + brandId + ")";
     }
 }

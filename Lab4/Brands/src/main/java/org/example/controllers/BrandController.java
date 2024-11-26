@@ -6,6 +6,7 @@ import org.example.services.BrandsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/brands")
 public class BrandController {
 
     private final BrandsService brandsService;
@@ -21,86 +23,52 @@ public class BrandController {
         this.brandsService = brandsService;
     }
 
-    @GetMapping("/brands")
-    public ResponseEntity<List<BrandDTO>> getAllBrands() {
-        var brandsDTO = brandsService.findAll().stream().map(BrandDTO::from).toList();
-        if (brandsDTO.isEmpty()) {
+    @GetMapping
+    public ResponseEntity<List<Brand>> getAllBrands() {
+        var brands = brandsService.findAll().stream().toList();
+        if (brands.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(brandsDTO, HttpStatus.OK);
+        return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 
-//    @GetMapping("/brands/{uuid}/cars")
-//    public ResponseEntity<List<CarDTO>> getCars(@PathVariable UUID uuid, @RequestParam(required = false) String sort) {
-//        var brand = brandsService.findById(uuid);
-//        if (brand.isEmpty())
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//
-//        List<CarDTO> foundCars = new java.util.ArrayList<>(carsService.findByBrand(brand.get()).stream().map(CarDTO::from).toList());
-//
-//        if(sort == null || sort.isEmpty())
-//            return new ResponseEntity<>(foundCars, HttpStatus.OK);
-//        else if (sort.equalsIgnoreCase("hp") || sort.equalsIgnoreCase("horsePower"))
-//            foundCars.sort(Comparator.comparing(CarDTO::getHorsePower));
-//        else if (sort.equalsIgnoreCase("model"))
-//            foundCars.sort(Comparator.comparing(CarDTO::getModel));
-//        return new ResponseEntity<>(foundCars, HttpStatus.OK);
-//
-//    }
+    @GetMapping("/{uuid}")
+    public ResponseEntity<Void> getBrand(@PathVariable UUID uuid) {
+        var brand = brandsService.findById(uuid);
+        return brand.map(value -> new ResponseEntity<Void>(HttpStatus.FOUND))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+    }
 
-//    @GetMapping("/brands/{name}/cars")
-//    public ResponseEntity<List<CarDTO>> getCars(@PathVariable String name, @RequestParam(required = false) String sort) {
-//        var brand = brandsService.findByName(name);
-//        if (brand.isEmpty())
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//
-//        List<CarDTO> foundCars = new java.util.ArrayList<>(carsService.findByBrand(brand.get(0)).stream().map(CarDTO::from).toList());
-//
-//        if (foundCars.isEmpty())
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//
-//        if(sort == null || sort.isEmpty())
-//            return new ResponseEntity<>(foundCars, HttpStatus.OK);
-//        else if (sort.equalsIgnoreCase("hp") || sort.equalsIgnoreCase("horsePower"))
-//            foundCars.sort(Comparator.comparing(CarDTO::getHorsePower));
-//        else if (sort.equalsIgnoreCase("model"))
-//            foundCars.sort(Comparator.comparing(CarDTO::getModel));
-//        return new ResponseEntity<>(foundCars, HttpStatus.OK);
-//    }
-//
-//    @PutMapping("/brands/{uuid}")
-//    public ResponseEntity<CarDTO> updateBrand(@PathVariable UUID uuid, @RequestBody BrandDTO brandDTO) {
-//        var brand = brandsService.findById(uuid);
-//        if (brand.isEmpty())
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//
-//        var newBrand = brand.get();
-//        newBrand.setName(brandDTO.getName());
-//        newBrand.setIssueYear(brandDTO.getIssueYear());
-//        brandsService.save(brand.get());
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/brands")
-//    public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brandDTO) {
-//        if(!brandsService.findByName(brandDTO.getName()).isEmpty())
-//            return new ResponseEntity<>(HttpStatus.CONFLICT);
-//        var brand = Brand.builder()
-//                .name(brandDTO.getName())
-//                .issueYear(brandDTO.getIssueYear())
-//                .cars(new ArrayList<>())
-//                .build();
-//        brandsService.save(brand);
-//        return new ResponseEntity<>(brandDTO, HttpStatus.CREATED);
-//    }
+    @PostMapping
+    public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brandDTO) {
+        if (!brandsService.findByName(brandDTO.getName()).isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        var brand = Brand.builder()
+                .name(brandDTO.getName())
+                .issueYear(brandDTO.getIssueYear())
+                .build();
+        brandsService.save(brand);
+        return new ResponseEntity<>(brandDTO, HttpStatus.CREATED);
+    }
 
-    @DeleteMapping("/brands/{uuid}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deleteBrand(@PathVariable UUID uuid) {
         var brand = brandsService.findById(uuid).stream().findFirst();
-        if (brand.isEmpty())
+        if (brand.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Notify Car Management about deletion
+        notifyCarManagementAboutDeletion(uuid);
+
         brandsService.delete(brand.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    private void notifyCarManagementAboutDeletion(UUID brandId) {
+        String carManagementUrl = "http://localhost:8082/cars/byBrand/" + brandId;
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.delete(carManagementUrl);
+    }
 }

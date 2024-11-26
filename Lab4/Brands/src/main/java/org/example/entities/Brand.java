@@ -32,4 +32,6 @@ public class Brand implements Serializable {
 //    @Builder.Default
 //    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 //    List<Car> cars = new ArrayList<>();
+    @ElementCollection
+    List<UUID> cars = new ArrayList<>();
 }

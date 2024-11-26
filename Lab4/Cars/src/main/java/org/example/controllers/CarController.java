@@ -2,30 +2,29 @@ package org.example.controllers;
 
 import org.example.entities.Car;
 import org.example.entities.CarDTO;
-import org.example.services.BrandsService;
 import org.example.services.CarsService;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/cars")
 public class CarController {
     private final CarsService carsService;
-    private final BrandsService brandsService;
 
-    public CarController(CarsService carsService, BrandsService brandsService) {
+    public CarController(CarsService carsService) {
         this.carsService = carsService;
-        this.brandsService = brandsService;
     }
 
-    @GetMapping("/cars")
+    @GetMapping
     public ResponseEntity<List<CarDTO>> listAllCars(@RequestParam(required = false) String sort) {
         List<Car> carList = carsService.findAll();
 
@@ -34,9 +33,8 @@ public class CarController {
         }
 
         List<CarDTO> resultList = new ArrayList<>();
-        for (Car car : carList)
-        {
-            CarDTO carDTO = new CarDTO(car.getModel(), car.getHorsePower(), car.getBrand().getName());
+        for (Car car : carList) {
+            CarDTO carDTO = new CarDTO(car.getModel(), car.getHorsePower(), car.getBrandId().toString());
             resultList.add(carDTO);
         }
 
@@ -47,29 +45,36 @@ public class CarController {
             resultList.sort(Comparator.comparing(CarDTO::getModel));
         else if (sort.equalsIgnoreCase("hp") || sort.equalsIgnoreCase("horsepower"))
             resultList.sort(Comparator.comparing(CarDTO::getHorsePower));
-        else if (sort.equalsIgnoreCase("brand"))
-            resultList.sort(Comparator.comparing(CarDTO::getBrand));
 
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
-    @GetMapping("/cars/{uuid}")
+    @GetMapping("/{uuid}")
     public ResponseEntity<CarDTO> getCar(@PathVariable UUID uuid) {
-        var car = carsService.findById(uuid);
-        return car.map(carEntity -> new ResponseEntity<>(CarDTO.from(carEntity), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<Car> car = carsService.findById(uuid);
+        return car.map(c -> new ResponseEntity<>(CarDTO.from(c), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/cars/add")
+    @PostMapping("/add")
     public ResponseEntity<CarDTO> addCar(@RequestBody CarDTO carDTO) {
 
-        var brand = brandsService.findByName(carDTO.getBrand()).stream().findFirst().orElse(null);
-        if (brand == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // Sprawdzanie, czy marka o podanym UUID istnieje w aplikacji "brands"
+        String brandUrl = "http://localhost:8081/brands/" + carDTO.getBrandId();
+        RestTemplate restTemplate = new RestTemplate();
 
-        var car = Car.builder()
+        // Wykonanie zapytania GET do aplikacji "brands" w celu sprawdzenia, czy marka istnieje
+        ResponseEntity<Void> brandResponse = restTemplate.exchange(brandUrl, HttpMethod.GET, null, Void.class);
+
+        if (brandResponse.getStatusCode() == HttpStatus.NO_CONTENT) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
+        Car car = Car.builder()
                 .model(carDTO.getModel())
                 .horsePower(carDTO.getHorsePower())
-                .brand(brand)
+                .brandId(UUID.fromString(carDTO.getBrandId()))
                 .build();
 
         carsService.save(car);
@@ -77,55 +82,37 @@ public class CarController {
         return new ResponseEntity<>(CarDTO.from(car), HttpStatus.CREATED);
     }
 
-    @PutMapping("/cars/{uuid}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<CarDTO> editCar(@PathVariable UUID uuid, @RequestBody CarDTO carDTO) {
-        var car = carsService.findById(uuid);
-        if (car.isEmpty()) {
+        Optional<Car> carOpt = carsService.findById(uuid);
+        if (carOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        var brand = brandsService.findByName(carDTO.getBrand()).stream().findFirst().orElse(null);
-        if (brand == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Car car = carOpt.get();
+        car.setModel(carDTO.getModel());
+        car.setHorsePower(carDTO.getHorsePower());
+        car.setBrandId(UUID.fromString(carDTO.getBrandId()));
 
-        var foundCar = car.get();
-        foundCar.setModel(carDTO.getModel());
-        foundCar.setHorsePower(carDTO.getHorsePower());
-        foundCar.setBrand(brand);
+        carsService.save(car);
 
-        carsService.save(foundCar);
-
-        return new ResponseEntity<>(CarDTO.from(foundCar), HttpStatus.OK); // Kod 200 OK
+        return new ResponseEntity<>(CarDTO.from(car), HttpStatus.OK);
     }
 
-    @PostMapping("/brands/{uuid}/cars")
-    public ResponseEntity<CarDTO> addCar(@PathVariable UUID uuid, @RequestBody CarDTO carDTO) {
-        var brand = brandsService.findById(uuid);
-        if (brand.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        var newCar = Car.builder()
-                .model(carDTO.getModel())
-                .horsePower(carDTO.getHorsePower())
-                .brand(brandsService.findById(uuid).get())
-                .build();
-
-        carsService.save(newCar);
-
-        return new ResponseEntity<>(CarDTO.from(newCar), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/cars/{uuid}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deleteCar(@PathVariable UUID uuid) {
-        var car = carsService.findById(uuid);
+        Optional<Car> car = carsService.findById(uuid);
         if (car.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        carsService.delete(car.get());
 
+        carsService.delete(car.get());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/byBrand/{brandId}")
+    public ResponseEntity<Void> deleteCarsByBrand(@PathVariable UUID brandId) {
+        carsService.deleteAllByBrandId(brandId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -1,17 +1,11 @@
 package org.example.components;
 
-import org.example.entities.Brand;
 import org.example.entities.Car;
-import org.example.repositories.CarBrandsRepository;
-import org.example.repositories.CarsRepository;
-import org.example.services.BrandsService;
 import org.example.services.CarsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -21,12 +15,10 @@ public class AdminComponent implements CommandLineRunner {
 
     private Boolean isRunning = true;
     private final CarsService carsService;
-    private final BrandsService brandsService;
 
     @Autowired
-    public AdminComponent(CarsService carsService, BrandsService brandsService) {
+    public AdminComponent(CarsService carsService) {
         this.carsService = carsService;
-        this.brandsService = brandsService;
     }
 
 
@@ -46,71 +38,37 @@ public class AdminComponent implements CommandLineRunner {
                     break;
                 }
 
-                case "listBrands":
-                {
-                    System.out.println("List of Brands: ");
-                    brandsService.findAll().forEach(System.out::println);
-                    break;
-                }
 
-                case "addCar":
-                {
-                    System.out.println("Enter car model: ");
-                    var carModel = scanner.nextLine().trim();
-                    System.out.println("Enter car horse power:");
-                    int hp;
-                    var temp = scanner.nextLine().trim();
-                    try {
-                        hp = Integer.parseInt(temp);
-                    }catch(InputMismatchException e) {
-                        System.out.println("Invalid car power!");
-                        break;
-                    }
-                    System.out.println("Enter car brand:");
-                    var brandName = scanner.nextLine().trim();
-                    var carBrand = brandsService.findByName(brandName).stream().findFirst();
+//                case "addCar":
+//                {
+//                    System.out.println("Enter car model: ");
+//                    var carModel = scanner.nextLine().trim();
+//                    System.out.println("Enter car horse power:");
+//                    int hp;
+//                    var temp = scanner.nextLine().trim();
+//                    try {
+//                        hp = Integer.parseInt(temp);
+//                    }catch(InputMismatchException e) {
+//                        System.out.println("Invalid car power!");
+//                        break;
+//                    }
+//                    System.out.println("Enter car brand:");
+//                    var brandName = scanner.nextLine().trim();
+//                    var carBrand = brandsService.findByName(brandName).stream().findFirst();
+//
+//                    if(carBrand.isEmpty()) {
+//                        System.out.println("Brand not found!");
+//                        break;
+//                    }
+//
+//                    var car = Car.builder().horsePower(hp).model(carModel).brand((Brand) carBrand.get()).build();
+//
+//                    carsService.save(car);
+//
+//                    break;
+//                }
 
-                    if(carBrand.isEmpty()) {
-                        System.out.println("Brand not found!");
-                        break;
-                    }
 
-                    var car = Car.builder().horsePower(hp).model(carModel).brand((Brand) carBrand.get()).build();
-
-                    carsService.save(car);
-
-                    break;
-                }
-
-                case "addBrand":
-                {
-                    System.out.println("Enter brand name:");
-                    var brandName = scanner.nextLine().trim();
-                    var brand = brandsService.findByName(brandName).stream().findFirst();
-                    if (brand.isPresent())
-                    {
-                        System.out.println("Brand already exists!");
-                        break;
-                    }
-
-                    System.out.println("Enter brand issue year:");
-                    var temp = scanner.nextLine().trim();
-
-                    int issueYear;
-                    try {
-                        issueYear = Integer.parseInt(temp);
-                    }catch (InputMismatchException e)
-                    {
-                        System.out.println("Invalid issue year!");
-                        break;
-                    }
-
-                    var newBrand = Brand.builder().name(brandName).issueYear(issueYear).build();
-
-                    brandsService.save(newBrand);
-
-                    break;
-                }
 
                 case "deleteCar":
                 {
@@ -148,26 +106,6 @@ public class AdminComponent implements CommandLineRunner {
                             System.out.println("Car with the specified horse power not found!");
                         }
                     }
-                    break;
-                }
-
-                case "deleteBrand":
-                {
-                    System.out.println("Enter brand name to remove:");
-                    var brandName = scanner.nextLine().trim();
-                    if(brandsService.findByName(brandName).isEmpty()) {
-                        System.out.println("Brand not found!");
-                        break;
-                    }
-                    var brand = brandsService.findByName(brandName).stream().findFirst();
-
-                    if (brand.isEmpty()) {
-                        System.out.println("Brand not found!");
-                        break;
-                    }
-
-                    brandsService.delete(brand.get());
-                    System.out.println("Brand removed successfully.");
                     break;
                 }
 
