@@ -97,4 +97,18 @@ body {
     display: flex;
     gap: 10px; /* Rozdziela elementy o 10px */
   }
+
+  /* Styl dla h1 - ładna ramka i efekt */
+h2 {
+    background-color: #1f1f1f; /* Ciemne tło dla nagłówka */
+    color: #ff4c4c; /* Czerwony kolor tekstu */
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #ff4c4c; /* Czerwona ramka */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień wokół nagłówka */
+    font-size: 2em; /* Większa czcionka */
+    text-align: center; /* Wyśrodkowanie tekstu */
+    margin: 20px 0; /* Odstępy wokół nagłówka */
+}
+
   

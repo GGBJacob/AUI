@@ -16,7 +16,7 @@
           <tr *ngFor="let car of cars">
             <td>{{ car.model }}</td>
             <td>{{ car.horsePower }}</td>
-            <td><a>{{ car.id }}</a></td>
+            <td><a [routerLink]="['/cars', car.id, 'details']">{{ car.id }}</a></td>
             <td class="actions">
               <button [routerLink]="['/cars', car.id, 'edit']">Edytuj</button>
               <button (click)="deleteCar(car.id)">Usuń</button>
