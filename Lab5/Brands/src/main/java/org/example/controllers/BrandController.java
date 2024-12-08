@@ -33,9 +33,9 @@ public class BrandController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Brand> getBrand(@PathVariable UUID uuid) {
+    public ResponseEntity<Void> getBrand(@PathVariable UUID uuid) {
         var brand = brandsService.findById(uuid);
-        return brand.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        return brand.map(value -> new ResponseEntity<Void>(HttpStatus.FOUND))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
@@ -47,7 +47,6 @@ public class BrandController {
         }
 
         brand.get().setIssueYear(brandDTO.getIssueYear());
-        brand.get().setName(brandDTO.getName());
         brandsService.save(brand.get());
 
         return new ResponseEntity<>(brandDTO, HttpStatus.OK);
@@ -94,31 +93,6 @@ public class BrandController {
         System.out.println("Deleted Brand: " + brand.get().getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @DeleteMapping("/{uuid}/{caruuid}")
-    public ResponseEntity<Void> deleteCarFromBrand(@PathVariable UUID uuid, @PathVariable UUID caruuid) //used to transfer cars between brands
-    {
-        var brand = brandsService.findById(uuid);
-
-        if (brand.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        List<UUID> cars = brand.get().getCars(); // Lista samochodów powiązana z marką
-        if (!cars.contains(caruuid)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        cars.remove(caruuid);
-
-        brand.get().setCars(cars);
-        brandsService.save(brand.get());
-
-        System.out.println("Usunięto samochód o UUID " + caruuid + " z marki: " + brand.get().getName());
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 
     private void notifyCarManagementAboutDeletion(UUID brandId) {
         String carManagementUrl = "http://localhost:8082/cars/byBrand/" + brandId;

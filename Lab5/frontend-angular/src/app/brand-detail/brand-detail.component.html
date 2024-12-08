@@ -1,0 +1,44 @@
+<div class="brand-container">
+    <h1 class="brand-title">{{ brand.name }}</h1>
+  
+    <div *ngIf="cars.length > 0; else noCars" class="cars-section">
+      <h2 class="section-title">Lista samochodów</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Konie mechaniczne</th>
+            <th>UUID</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let car of cars">
+            <td>{{ car.model }}</td>
+            <td>{{ car.horsePower }}</td>
+            <td><a>{{ car.id }}</a></td>
+            <td class="actions">
+              <button [routerLink]="['/cars', car.id, 'edit']">Edytuj</button>
+              <button (click)="deleteCar(car.id)">Usuń</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <ng-template #noCars>
+      <p>Brak samochodów.</p>
+    </ng-template>
+  
+    <div class="add-car-section">
+      <h2 class="section-title">Dodaj nowy samochód</h2>
+      <form (ngSubmit)="addCar()">
+        <label for="name">Model:</label>
+        <input id="name" [(ngModel)]="car.model" name="name" required placeholder="Wpisz model samochodu"/>
+        <label for="horsePower">Konie mechaniczne:</label>
+        <input id="horsePower" [(ngModel)]="car.horsePower" name="horsePower" required placeholder="Podaj liczbę koni" />
+        <button type="submit">Dodaj</button>
+      </form>
+    </div>
+  </div>
+  

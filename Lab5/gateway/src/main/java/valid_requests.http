@@ -1,0 +1,58 @@
+### List all cars
+GET http://localhost:8080/cars
+
+
+### Modify BMW M9 into Tesla
+PUT http://localhost:8080/cars/73a33a96-d821-4f1e-9109-4c78db0df1f5
+Content-Type: application/json
+
+{
+  "model": "M8",
+  "horsePower": 1000,
+  "brandId": "9fd93d44-3b70-4d7a-8363-5b73a676f185"
+}
+
+### Create new BMW using cars
+POST http://localhost:8080/cars/add
+Content-Type: application/json
+
+{
+  "model": "M10",
+  "horsePower": 1250,
+  "brandId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+### Delete Audi brand
+DELETE http://localhost:8080/brands/f47ac10b-58cc-4372-a567-0e02b2c3d479
+
+### List brands
+GET http://localhost:8080/brands
+
+### Create Skoda brand
+POST http://localhost:8080/brands
+Content-Type: application/json
+
+{
+  "name": "Skoda",
+  "issueYear": 1945
+}
+
+### Update Tesla issue year
+PUT http://localhost:8080/brands/9fd93d44-3b70-4d7a-8363-5b73a676f185
+Content-Type: application/json
+
+{
+  "name": "Tesla",
+  "issueYear": 2020
+}
+
+
+### Create Skoda car
+POST http://localhost:8080/cars/add
+Content-Type: application/json
+
+{
+  "model": "Octavia",
+  "horsePower": 1250,
+  "brandId": "c8c09dac-fbc9-4583-97be-95763d2018ce"
+}

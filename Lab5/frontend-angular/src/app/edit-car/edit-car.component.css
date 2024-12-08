@@ -1,0 +1,90 @@
+/* Ogólne style */
+body {
+    background-color: #121212; /* Ciemne tło */
+    color: #ffffff; /* Biały tekst */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Kontener samochodu */
+  .car-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  
+  /* Sekcja edycji samochodu */
+  .edit-car-section {
+    background-color: #1f1f1f; /* Ciemne tło sekcji */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  /* Tytuł sekcji */
+  .section-title {
+    color: #ff4c4c; /* Czerwony kolor tytułu */
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  /* Formularz */
+  form {
+    background-color: #1f1f1f; /* Ciemne tło formularza */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  /* Grupa pól formularza */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  /* Etykiety formularza */
+  form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ff4c4c; /* Czerwone etykiety */
+  }
+  
+  /* Pola tekstowe w formularzu */
+  form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333333;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  form select {
+    background-color: #121212;
+    color: #ffffff;
+    border: 1px solid #333333;
+  }
+  
+  /* Przyciski formularza */
+  form button {
+    background-color: #ff4c4c; /* Czerwony przycisk */
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  form button:hover {
+    background-color: #cc3b3b; /* Ciemniejszy czerwony przycisk po najechaniu */
+  }
+  
+  /* Odstępy między akcjami */
+  .actions {
+    display: flex;
+    gap: 10px; /* Rozdziela elementy o 10px */
+  }
+  

@@ -1,0 +1,57 @@
+<div class="brand-container">
+    <h2 class="section-title">Lista marek</h2>
+  
+    <div *ngIf="brands.length > 0; else noBrands" class="brands-section">
+      <table>
+        <thead>
+          <tr>
+            <th>Nazwa</th>
+            <th>ID</th>
+            <th>Rok założenia</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let brand of brands">
+            <td>{{ brand.name }}</td>
+            <td><a [routerLink]="['/brands', brand.id]">{{ brand.id }}</a></td>
+            <td>{{ brand.issueYear }}</td>
+            <td class="actions">
+                <button [routerLink]="['/brands', brand.id, 'edit']">Edytuj</button>
+                <button (click)="deleteBrand(brand.id)">Usuń</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <ng-template #noBrands>
+      <p>Brak dostępnych marek.</p>
+    </ng-template>
+  
+    <div class="add-brand-section">
+      <h2 class="section-title">Dodaj nową markę</h2>
+      <form (ngSubmit)="addBrand()">
+        <label for="name">Nazwa:</label>
+        <input
+          id="name"
+          [(ngModel)]="brand.name"
+          name="name"
+          required
+          minlength="1"
+          placeholder="Wprowadź nazwę marki"
+        />
+        <label for="date">Data założenia:</label>
+        <input
+          id="date"
+          [(ngModel)]="brand.issueYear"
+          name="issueYear"
+          required
+          placeholder="Wprowadź rok założenia"
+          type="number"
+        />
+        <button type="submit">Dodaj</button>
+      </form>
+    </div>
+  </div>
+  

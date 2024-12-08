@@ -1,0 +1,29 @@
+
+<div class="brand-container">
+    <div class="edit-brand-section">
+        <h2 class="section-title">Edytuj markę</h2>
+        <form (ngSubmit)="saveBrand()">
+        <div class="form-group">
+            <label for="name">Nazwa:</label>
+            <input 
+            id="name" 
+            [(ngModel)]="brand.name" 
+            name="name" 
+            required 
+            placeholder="Wpisz nazwę marki" />
+        </div>
+
+        <div class="form-group">
+            <label for="issueYear">Rok założenia:</label>
+            <input 
+            id="issueYear" 
+            [(ngModel)]="brand.issueYear" 
+            name="issueYear" 
+            required 
+            placeholder="Wpisz rok założenia marki" />
+        </div>
+
+        <button type="submit">Zapisz zmiany</button>
+        </form>
+    </div>
+</div>
