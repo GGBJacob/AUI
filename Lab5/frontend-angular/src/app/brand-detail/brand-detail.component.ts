@@ -35,7 +35,7 @@ getBrand(): void{
       console.log('Odpowiedź z API (wszystkie marki):', allBrands);
       // Filtrowanie samochodów pasujących do UUID z `this.carIds`
       this.brand = allBrands.find((brand: any) => this.brandId === brand.id);
-      console.log('Marka dopasowana do UUID:' + this.brand);
+      console.log('Marka dopasowana do UUID:' + this.brand.name);
     },
     error: (err) => {
       this.errorMessage = 'Wystąpił błąd podczas ładowania wszystkich marek!';

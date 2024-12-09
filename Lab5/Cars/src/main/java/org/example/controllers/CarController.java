@@ -34,7 +34,7 @@ public class CarController {
 
         List<CarDTO> resultList = new ArrayList<>();
         for (Car car : carList) {
-            CarDTO carDTO = new CarDTO(car.getModel(), car.getHorsePower(), car.getBrandId().toString());
+            CarDTO carDTO = new CarDTO(car.getId(), car.getModel(), car.getHorsePower(), car.getBrandId().toString());
             resultList.add(carDTO);
         }
 
@@ -93,9 +93,23 @@ public class CarController {
         }
 
         Car car = carOpt.get();
+        UUID oldBrandId = car.getBrandId();
+
         car.setModel(carDTO.getModel());
         car.setHorsePower(carDTO.getHorsePower());
         car.setBrandId(UUID.fromString(carDTO.getBrandId()));
+
+        if (!oldBrandId.equals(car.getBrandId())) {
+
+            String removeCarUrl =  "http://localhost:8081/brands/" + oldBrandId + '/' + car.getId().toString();
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.delete(removeCarUrl);
+
+            // Zaktualizuj nową markę
+            String addCarUrl =  "http://localhost:8081/brands/" + carDTO.getBrandId() + '/' + car.getId().toString();
+            restTemplate = new RestTemplate();
+            restTemplate.postForEntity(addCarUrl, null, Void.class);
+        }
 
         carsService.save(car);
 

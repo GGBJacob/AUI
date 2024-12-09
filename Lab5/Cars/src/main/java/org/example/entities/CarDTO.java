@@ -12,11 +12,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarDTO {
+    private UUID id;
     private String model;
     private int horsePower;
     private String brandId;
 
     public static CarDTO from(Car car) {
-        return new CarDTO(car.getModel(), car.getHorsePower(), car.getBrandId().toString());
+        return new CarDTO(car.getId(), car.getModel(), car.getHorsePower(), car.getBrandId().toString());
     }
 }
