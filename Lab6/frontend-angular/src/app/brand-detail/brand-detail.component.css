@@ -1,0 +1,129 @@
+/* Wyśrodkowanie głównej sekcji */
+.brand-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* Tytuł marki */
+  .brand-title {
+    font-size: 36px;
+    color: #ff4c4c;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  
+  /* Sekcja samochodów */
+  .cars-section {
+    margin-top: 20px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #ffffff;
+  }
+  
+  /* Tabela */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #333333;
+    text-align: left;
+  }
+  
+  td {
+    color: white;
+  }
+  
+  th {
+    background-color: #1f1f1f;
+    color: #ff4c4c;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #1a1a1a;
+  }
+  
+  tr:nth-child(odd) {
+    background-color: #2a2a2a;
+  }
+  
+  /* Linki i przyciski */
+  a {
+    color: #ff4c4c;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  button {
+    background-color: #ff4c4c;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #cc3b3b;
+  }
+  
+  /* Sekcja dodawania samochodu */
+  .add-car-section {
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ff4c4c;
+  }
+  
+  form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #333333;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  form button {
+    display: block;
+    width: 100%;
+  }
+  
+/* Styl dla h1 - ładna ramka i efekt */
+h1.brand-title {
+    background-color: #1f1f1f; /* Ciemne tło dla nagłówka */
+    color: #ff4c4c; /* Czerwony kolor tekstu */
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #ff4c4c; /* Czerwona ramka */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień wokół nagłówka */
+    font-size: 2em; /* Większa czcionka */
+    text-align: center; /* Wyśrodkowanie tekstu */
+    margin: 20px 0; /* Odstępy wokół nagłówka */
+}
+

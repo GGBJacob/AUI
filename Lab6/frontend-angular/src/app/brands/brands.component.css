@@ -1,0 +1,113 @@
+/* Ogólne style */
+body {
+  background-color: #121212; /* Ciemne tło */
+  color: #ffffff; /* Biały tekst */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Tabela */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #333333; /* Ciemniejsze linie tabeli */
+  text-align: left;
+}
+
+td {
+  color: white;
+}
+
+th {
+  background-color: #1f1f1f; /* Ciemniejszy nagłówek */
+  color: #ff4c4c; /* Czerwony kolor nagłówków */
+}
+
+tr:nth-child(even) {
+  background-color: #1a1a1a; /* Alternatywne wiersze */
+}
+
+tr:nth-child(odd) {
+  background-color: #2a2a2a;
+}
+
+/* Linki i przyciski */
+a {
+  color: #ff4c4c; /* Czerwone linki */
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: #ff4c4c; /* Czerwony przycisk */
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+button:hover {
+  background-color: #cc3b3b; /* Ciemniejszy czerwony przycisk po najechaniu */
+}
+
+/* Formularz */
+form {
+  background-color: #1f1f1f; /* Ciemne tło formularza */
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ff4c4c; /* Czerwone etykiety */
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #333333;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+form button {
+  display: block;
+  width: 100%;
+}
+
+/* Odstępy między akcjami */
+.actions {
+  display: flex;
+  gap: 10px; /* Rozdziela elementy o 10px */
+}
+
+/* Styl dla h1 - ładna ramka i efekt */
+h2 {
+  background-color: #1f1f1f; /* Ciemne tło dla nagłówka */
+  color: #ff4c4c; /* Czerwony kolor tekstu */
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #ff4c4c; /* Czerwona ramka */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lekki cień wokół nagłówka */
+  font-size: 2em; /* Większa czcionka */
+  text-align: center; /* Wyśrodkowanie tekstu */
+  margin: 20px 0; /* Odstępy wokół nagłówka */
+}
+

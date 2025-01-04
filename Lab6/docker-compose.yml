@@ -1,0 +1,57 @@
+services:
+
+  gateway:
+    container_name: gateway-container
+    build: 
+      context: /gateway/
+    image: gateway-image
+    environment:
+      - BRANDS_HOST=brands-app
+      - BRANDS_PORT=8081
+      - CARS_HOST=cars-app
+      - CARS_PORT=8082
+      - ANGULAR_HOST=angular-app
+      - ANGULAR_PORT=8084
+    depends_on:
+      - cars-app
+      - brands-app
+    networks:
+      - app-network
+    ports:
+      - 8080:8080
+  
+  cars-app:
+    container_name: cars-container
+    build: 
+      context: /Cars/
+    image: cars-image
+    networks:
+      - app-network
+    ports: 
+     - 8082:8082
+  
+  brands-app:
+    container_name: brands-container
+    build: 
+      context: /Brands/
+    image: brands-image
+    networks:
+      - app-network
+    ports:
+      - 8081:8081
+
+  angular-app:
+    container_name: angular-container
+    build: 
+      context: /frontend-angular/
+    image: angular-image
+    depends_on:
+      - gateway
+    ports:
+      - 8084:8084
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

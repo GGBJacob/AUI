@@ -1,0 +1,29 @@
+/* Styl dla przycisku */
+.home-button {
+    display: inline-block;
+    background-color: #ff4c4c; /* Czerwony kolor tła */
+    color: #ffffff; /* Biały tekst */
+    padding: 20px 40px;
+    border-radius: 50px; /* Zaokrąglone rogi */
+    text-decoration: none; /* Usuwamy podkreślenie */
+    font-size: 1.5em; /* Większy rozmiar tekstu */
+    text-align: center; /* Wyśrodkowanie tekstu */
+    font-weight: bold; /* Pogrubiony tekst */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Cień wokół przycisku */
+    transition: all 0.3s ease; /* Animacja przejścia przy zmianie */
+    margin-top: 20px;
+}
+
+/* Efekt hover */
+.home-button:hover {
+    background-color: #cc3b3b; /* Ciemniejszy czerwony na hover */
+    transform: translateY(-5px); /* Uniesienie przycisku */
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); /* Zwiększony cień przy hover */
+}
+
+/* Styl dla tekstu w h2 */
+.home-button h2 {
+    margin: 0; /* Usuwamy domyślne marginesy */
+    font-size: inherit; /* Przypisujemy ten sam rozmiar czcionki */
+    text-transform: uppercase; /* Wszystko na wielkie litery */
+}
