@@ -1,37 +1,29 @@
-## Laboratory 6: Docker & Docker Compose
+# Laboratory 7: Advanced Deployment with Docker Compose
 
-### Objective:
-Learn how to containerize applications using Docker and orchestrate them with Docker Compose. This includes working with Spring Boot and Angular applications alongside external databases.
+## Objective:
+Learn advanced deployment techniques for web services, including configuring environments, service discovery, centralized configurations, and load balancing. Implement and test these features using Docker Compose.
 
-### Instructions:
-1. **Docker Container for Angular Application**
-   - Create a Docker container based on the NGINX image.
-   - Build the Angular application and configure NGINX as a proxy using environment variables.
-   - Expose the appropriate port for the container.  
+## Instructions:
 
-2. **Docker Container for Spring Boot Categories Application**
-   - Create a Docker container based on the Eclipse Temurin image.
-   - Configure the Spring Boot application using environment variables.
-   - Expose the appropriate port for the container.  
+### 1. Service Registration with Discovery Service
+- Configure both Spring Boot applications (`categories` and `elements`) to register with a single discovery service.
+- Deploy **two instances** of the `elements` service.
+- Verify service registration using logs or a discovery service dashboard.
 
-3. **Docker Container for Spring Boot Elements Application**
-   - Create a Docker container based on the Eclipse Temurin image.
-   - Configure the Spring Boot application using environment variables.
-   - Expose the appropriate port for the container.  
+### 2. Load Balancing with Discovery Service
+- Configure a gateway service and ensure it communicates with other services (`categories` and `elements`) using the discovery service.
+- Enable a load balancer to distribute requests across multiple instances of the `elements` service.
+- Use logs to demonstrate requests being routed to different instances.
 
-4. **Docker Compose Configuration**
-   - Create a `docker-compose.yml` file to include all three applications:
-     - Angular application
-     - Spring Boot categories application
-     - Spring Boot elements application
-   - Expose ports for each service and configure containers with the necessary environment variables.  
+### 3. External Database with Volume Configuration
+- Use an external database server of your choice for both the `categories` and `elements` services.
+- Configure persistent storage for the database using Docker volumes.
+- Ensure multiple instances of a service (e.g., `elements`) connect to the same database instance.
 
-5. **External Database for Categories**
-   - Add an external database container (choose any database) to the Docker Compose configuration.
-   - Configure the Spring Boot categories application to use this database container.  
+### 4. Automatic Database Table Creation
+- Implement automatic database table creation using a migration framework (e.g., Flyway or Liquibase).
+- Verify that database tables are created on application startup.
 
-6. **External Database for Elements**
-   - Add an external database container (choose any database) to the Docker Compose configuration.
-   - Configure the Spring Boot elements application to use this database container.  
-
-
+### 5. Centralized Configuration Service
+- Use a centralized configuration service to provide configuration data for all services, including database and discovery service settings.
+- Ensure the location of the configuration service and instance IDs are set using environment variables.

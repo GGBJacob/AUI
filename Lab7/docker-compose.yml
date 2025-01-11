@@ -6,32 +6,50 @@ services:
       context: /gateway/
     image: gateway-image
     environment:
-      - BRANDS_HOST=brands-app
-      - BRANDS_PORT=8081
-      - CARS_HOST=cars-app
-      - CARS_PORT=8082
-      - ANGULAR_HOST=angular-app
-      - ANGULAR_PORT=8084
+      - PORT=8080
     depends_on:
-      - discovery
-      - cars-app
-      - brands-app
+      config-server:
+        condition: service_healthy
+      discovery:
+        condition: service_started
+      cars-app:
+        condition: service_started
+      brands-app:
+        condition: service_started
     networks:
       - app-network
     ports:
       - 8080:8080
-  
+
+  config-server:
+    container_name: server-container
+    build:
+      context: /config-server/
+    image: server-image
+    depends_on:
+      - discovery
+    networks:
+      - app-network
+    ports:
+      - 8888:8888
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
   cars-app:
     container_name: cars-container
     build: 
       context: /Cars/
     image: cars-image
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://cars-db:5432/cars
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+      - SPRING_CONFIG_URI=http://config-server:8888
+      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd   # !
       - PORT=8082
     depends_on:
+     config-server:
+      condition: service_healthy
      discovery:
       condition: service_started
      cars-db:
@@ -47,15 +65,16 @@ services:
       context: /Cars/
     image: cars-image
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://cars-db:5432/cars
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+      - SPRING_CONFIG_URI=http://config-server:8888
+      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd   # !
       - PORT=8083
     depends_on:
-      discovery:
-        condition: service_started
-      cars-db:
-        condition: service_healthy
+     config-server:
+      condition: service_healthy
+     discovery:
+      condition: service_started
+     cars-db:
+      condition: service_healthy
     networks:
       - app-network
     ports:
@@ -67,11 +86,12 @@ services:
       context: /Brands/
     image: brands-image
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://brands-db:5432/brands
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+      - SPRING_CONFIG_URI=http://config-server:8888
+      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd   # !
       - PORT=8081
     depends_on:
+     config-server:
+      condition: service_healthy
      discovery:
       condition: service_started
      brands-db:
