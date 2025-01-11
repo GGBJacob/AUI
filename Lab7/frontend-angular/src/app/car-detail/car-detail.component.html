@@ -1,0 +1,15 @@
+<div class="car-container">
+    <h1 class="section-title">Szczegóły samochodu</h1>
+
+    <div *ngIf="car" class="car-details">
+        <p><strong>Model:</strong> {{ car.model }}</p>
+        <p><strong>Konie mechaniczne:</strong> {{ car.horsePower }}</p>
+        <p><strong>Marka:</strong> {{ brand.name }}</p> <!-- Brand name może być w car z powiązaną marką -->
+
+        <button [routerLink]="['/brands', car.brandId]">Powrót do marki</button> <!-- Link do szczegółów marki -->
+    </div>
+
+    <ng-template #noCar>
+        <p>Samochód nie został znaleziony.</p>
+    </ng-template>
+</div>

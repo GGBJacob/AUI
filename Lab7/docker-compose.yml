@@ -1,0 +1,147 @@
+services:
+
+  gateway:
+    container_name: gateway-container
+    build: 
+      context: /gateway/
+    image: gateway-image
+    environment:
+      - BRANDS_HOST=brands-app
+      - BRANDS_PORT=8081
+      - CARS_HOST=cars-app
+      - CARS_PORT=8082
+      - ANGULAR_HOST=angular-app
+      - ANGULAR_PORT=8084
+    depends_on:
+      - discovery
+      - cars-app
+      - brands-app
+    networks:
+      - app-network
+    ports:
+      - 8080:8080
+  
+  cars-app:
+    container_name: cars-container
+    build: 
+      context: /Cars/
+    image: cars-image
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cars-db:5432/cars
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+      - PORT=8082
+    depends_on:
+     discovery:
+      condition: service_started
+     cars-db:
+      condition: service_healthy
+    networks:
+      - app-network
+    ports: 
+     - 8082:8082
+
+  cars-app2:
+    container_name: cars-container2
+    build:
+      context: /Cars/
+    image: cars-image
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cars-db:5432/cars
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+      - PORT=8083
+    depends_on:
+      discovery:
+        condition: service_started
+      cars-db:
+        condition: service_healthy
+    networks:
+      - app-network
+    ports:
+      - 8083:8083
+
+  brands-app:
+    container_name: brands-container
+    build: 
+      context: /Brands/
+    image: brands-image
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://brands-db:5432/brands
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+    depends_on:
+     discovery:
+      condition: service_started
+     brands-db:
+      condition: service_healthy
+    networks:
+      - app-network
+    ports:
+      - 8081:8081
+
+  angular-app:
+    container_name: angular-container
+    build: 
+      context: /frontend-angular/
+    image: angular-image
+    depends_on:
+      - gateway
+    ports:
+      - 8084:8084
+    networks:
+      - app-network
+
+  cars-db:
+    image: postgres:17-bookworm
+    container_name: cars-db-container
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=V3ryS3cur3P@$$w0rd
+      - POSTGRES_DB=cars
+    volumes:
+      - cars_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d cars"]
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
+  
+  brands-db:
+    image: postgres:17-bookworm
+    container_name: brands-db-container
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=V3ryS3cur3P@$$w0rd
+      - POSTGRES_DB=brands
+    volumes:
+      - brands_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d brands"]
+      interval: 5s
+      retries: 5
+      start_period: 20s
+      timeout: 5s
+
+  discovery:
+    container_name: discovery-container
+    build:
+      context: /discovery/
+    image: discovery-image
+    networks:
+      - app-network
+    ports:
+      - 8761:8761
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  cars_data:
+  brands_data:

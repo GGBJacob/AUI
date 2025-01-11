@@ -1,0 +1,39 @@
+<div class="car-container">
+    <div class="edit-car-section">
+        <h2 class="section-title">Edytuj samochód</h2>
+        <form (ngSubmit)="saveCar()">
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <input 
+                    id="model" 
+                    [(ngModel)]="car.model" 
+                    name="model" 
+                    required 
+                    placeholder="Wpisz model samochodu" />
+            </div>
+
+            <div class="form-group">
+                <label for="horsePower">Konie mechaniczne:</label>
+                <input 
+                    id="horsePower" 
+                    [(ngModel)]="car.horsePower" 
+                    name="horsePower" 
+                    required 
+                    placeholder="Wpisz liczbę koni mechanicznych" />
+            </div>
+
+            <div class="form-group">
+                <label for="brandId">Marka:</label>
+                <select 
+                    id="brandId" 
+                    [(ngModel)]="car.brandId" 
+                    name="brandId" 
+                    required>
+                    <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+                </select>
+            </div>
+
+            <button type="submit">Zapisz zmiany</button>
+        </form>
+    </div>
+</div>
