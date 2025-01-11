@@ -70,6 +70,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://brands-db:5432/brands
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=V3ryS3cur3P@$$w0rd
+      - PORT=8081
     depends_on:
      discovery:
       condition: service_started
