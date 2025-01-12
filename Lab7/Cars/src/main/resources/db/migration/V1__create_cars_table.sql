@@ -3,6 +3,5 @@ CREATE TABLE IF NOT EXISTS cars (
     brand_id UUID NOT NULL,
     car_id UUID NOT NULL,
     car_model VARCHAR(255) NOT NULL,
-    PRIMARY KEY (car_id),
-    FOREIGN KEY (brand_id) REFERENCES brands (brand_id)
+    PRIMARY KEY (car_id)
 );
