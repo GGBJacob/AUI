@@ -7,6 +7,7 @@ import { EditCarComponent } from './edit-car/edit-car.component';
 import { CarDetailComponent } from './car-detail/car-detail.component';
 
 export const routes: Routes = [
+    { path: '', redirectTo: 'brands', pathMatch: 'full'},
     { path: 'brands', component: BrandsComponent},
     { path: 'brands/:uuid', component: BrandDetailComponent},
     { path: 'brands/:uuid/edit', component: EditBrandComponent},

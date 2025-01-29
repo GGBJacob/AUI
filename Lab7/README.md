@@ -27,3 +27,15 @@ Learn advanced deployment techniques for web services, including configuring env
 ### 5. Centralized Configuration Service
 - Use a centralized configuration service to provide configuration data for all services, including database and discovery service settings.
 - Ensure the location of the configuration service and instance IDs are set using environment variables.
+
+## Service Ports
+
+Below are the port mappings for the different services in the application:
+
+- **Discovery Service**: `8761`
+- **Server Service**: `8888`
+- **Brands Service**: `8081`
+- **Cars Service 1**: `8082`
+- **Cars Service 2**: `8083`
+- **Gateway Service**: `8080`
+- **Angular Frontend**: `8084`
