@@ -25,4 +25,4 @@ A modular web application with microservices and containerization. The applicati
 To launch the latest version, navigate to the Lab7 folder and run the command `docker compose up` in your terminal.
 
 ## Author
-Project developed as part of laboratory exercises on microservices and containerization by Jakub Romanowski.
+Project developed as part of the laboratory exercises for the Internet Services Architectures course by Jakub Romanowski.
